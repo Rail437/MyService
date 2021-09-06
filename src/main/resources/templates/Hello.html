@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0-1/css/bootstrap.min.css}"/>
+</head>
+<body>
+
+<h2>"Hello! Click on the button and get result!"</h2>
+
+<form th:action="@{/}" name="find-gif" method="get">
+    <div class="mb-3">
+        <button type="submit" name="find-gif" class="btn-primary">Action</button>
+    </div>
+</form>
+<div>
+    <h1>Result</h1>
+    <img src = "https://www.reactiongifs.com/r/fgwv.gif" th:src="@{${gifurl}}"/>
+</div>
+</body>
+</html>
