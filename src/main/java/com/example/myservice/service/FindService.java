@@ -1,14 +1,9 @@
 package com.example.myservice.service;
 
-import com.example.myservice.configs.MyData;
 import com.example.myservice.model.MyGif;
 import com.example.myservice.model.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 @Service
 public class FindService {
@@ -16,8 +11,6 @@ public class FindService {
     private FindRate findRate;
     @Autowired
     private FindGif findGif;
-    @Autowired
-    private MyData myData;
 
     private String helloGif = "https://www.reactiongifs.com/r/fgwv.gif";
 
@@ -25,12 +18,11 @@ public class FindService {
     }
 
     public String finder(){
-        Root firstRoot = findRate.findRate(true);
-        Root twoRoot = findRate.findRate(false);
-        System.out.println("firstRoot.getRates(): "+firstRoot.getRates() + " twoRoot.getRates(): " + twoRoot.getRates());
+        Root firstRoot = findRate.findByRate(true);
+        Root twoRoot = findRate.findByRate(false);
         Double check = (firstRoot.getRates() - twoRoot.getRates());
 
-        MyGif myGif = findGif.findGif(check);
+        MyGif myGif = findGif.findRandomGif(check);
         this.helloGif = myGif.getEmbed_url();
         return myGif.getEmbed_url();
     }

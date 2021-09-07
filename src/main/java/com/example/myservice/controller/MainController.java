@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-class MainController {
+public class MainController {
 
     @Autowired
     FindService findService;

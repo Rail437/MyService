@@ -24,8 +24,6 @@ public class MyData {
     @Value("${mydata.gif_api_key}")
     private String gif_api_key;
 
-    @Value("${mydata.base}")
-    private String base;
     @Value("${mydata.currency}")
     private String currency;
 
@@ -51,16 +49,15 @@ public class MyData {
 
     @PostConstruct
     private void init() {
-        this.GIF_HTTP = gif_api_http + gif_api_key + "&q=";
+        this.GIF_HTTP = gif_api_http + "search?api_key=" + gif_api_key + "&q=";
         this.RATE_HTTP = rate_api_http + "latest.json?app_id="
-                + rate_api_key + "&base=" + base + "&symbols=" + currency;
+                + rate_api_key + "&base=usd&symbols=" + currency;
         Calendar cal = Calendar.getInstance();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         cal.add(Calendar.DATE, -1);
         this.historicalData = "historical/" + dateFormat.format(cal.getTime()) + ".json?";
         this.HISTORICAL_RATE_HTTP = rate_api_http + historicalData
                 + "app_id=" + rate_api_key
-                + "&base=" + base
-                + "&symbols=" + currency;
+                + "&base=usd&symbols=" + currency;
     }
 }

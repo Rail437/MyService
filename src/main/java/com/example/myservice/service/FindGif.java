@@ -23,7 +23,7 @@ public class FindGif {
     @Autowired
     private MyData myData;
 
-    public MyGif findGif(Double result){
+    public MyGif findRandomGif(Double result){
         StringBuilder content = new StringBuilder();
         String findedGif = myData.getFindRichGif();
         if(result < 0){
@@ -31,7 +31,7 @@ public class FindGif {
         }
 
         String myUrl = myData.getGIF_HTTP()+findedGif;
-        System.out.println("FindGif: " +myUrl);
+        //System.out.println("FindGif: " +myUrl);
         final URL url;
         try {
             url = new URL(myUrl);
@@ -49,6 +49,7 @@ public class FindGif {
             in.close();
         } catch (IOException e) {
             e.printStackTrace();
+            return parseGifJson("error");
         }
         return parseGifJson(content.toString());
     }
@@ -59,6 +60,7 @@ public class FindGif {
         try {
             // конвертируем строку с Json в JSONObject для дальнейшего его парсинга
             JSONObject jsonObject = (JSONObject) JSONValue.parseWithException(string);
+
             JSONArray simpleObject = (JSONArray) jsonObject.get("data");
             int random = new Random().nextInt(20);
 
@@ -70,6 +72,7 @@ public class FindGif {
 
         } catch (org.json.simple.parser.ParseException e) {
             e.printStackTrace();
+            return new MyGif("https://media.giphy.com/media/8L0Pky6C83SzkzU55a/source.gif?cid=ecf05e47bnkdsv1p83f0sgfd1mevdlf595o8wrym76rpbstc&rid=source.gif&ct=g");
         }
         return myGif;
 

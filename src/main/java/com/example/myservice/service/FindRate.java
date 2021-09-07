@@ -20,13 +20,13 @@ import java.util.Locale;
 public class FindRate {
     @Autowired
     MyData myData;
-    public Root findRate(Boolean latest){
+    public Root findByRate(Boolean latest){
         StringBuilder content = new StringBuilder();
         String myUrl = myData.getRATE_HTTP();
         if (!latest){
             myUrl = myData.getHISTORICAL_RATE_HTTP();
         }
-        System.out.println("FindRate: " + myUrl);
+        //System.out.println("FindRate: " + myUrl);
         final URL url;
         try {
             url = new URL(myUrl);
@@ -44,6 +44,7 @@ public class FindRate {
         in.close();
         } catch (IOException e) {
             e.printStackTrace();
+            return new Root(0.404);
         }
         return parseJson(content.toString());
     }
@@ -62,6 +63,7 @@ public class FindRate {
 
         } catch (org.json.simple.parser.ParseException e) {
             e.printStackTrace();
+            return new Root(0.404);
         }
         return root;
     }
