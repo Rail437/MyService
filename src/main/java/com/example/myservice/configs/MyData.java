@@ -1,30 +1,66 @@
 package com.example.myservice.configs;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.intellij.lang.annotations.Pattern;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 @Data
 @Component
+@RequiredArgsConstructor
+@PropertySource("classpath:MyData.properties")
+@ConfigurationProperties(prefix = "mydata")
 public class MyData {
-    private final String RATE_API_KEY = "bb2ae58365784711a4619ef57b83e413";
-    private final String GIF_API_KEY = "LEGowpHETKGQcnjdhcoDBKEt2aDWlBXr";
+    @Value("${mydata.rate_api_key}")
+    private String rate_api_key;
+    @Value("${mydata.gif_api_key}")
+    private String gif_api_key;
 
-    private String base = "usd";
-    private String currency = "EUR";
-    private String findGif = "rich";
+    @Value("${mydata.base}")
+    private String base;
+    @Value("${mydata.currency}")
+    private String currency;
+
+    private String findRichGif = "rich";
+    private String findBrokeGif = "broke";
+    @Value("${mydata.gif_api_http}")
+    private String gif_api_http;
+    @Value("${mydata.rate_api_http}")
+    private String rate_api_http;
+
 
     @Pattern(value = "yyyy-MM-dd")
-    private String date = "2021-08-31";
+    private String date = "2021-09-07";
 
-    private final String GIF_HTTP = "http://api.giphy.com/v1/gifs/search?api_key="+ GIF_API_KEY +"&q="+findGif;
+    private String dataLatest = "latest.json?";
+    private String historicalData;
 
-    private String RATE_HTTP = "https://openexchangerates.org/api/latest.json?app_id="
-            + RATE_API_KEY +"&base=" + base + "&symbols=" + currency;
 
-    private String HISTORICAL_RATE_HTTP = "https://openexchangerates.org/api/historical/"
-            +date+".json?"
-            +"app_id="+RATE_API_KEY
-            +"&base="+base
-            +"&symbols="+currency;
+    private String GIF_HTTP;
+    private String RATE_HTTP;
+    private String HISTORICAL_RATE_HTTP;
+
+
+    @PostConstruct
+    private void init() {
+        this.GIF_HTTP = gif_api_http + gif_api_key + "&q=";
+        this.RATE_HTTP = rate_api_http + "latest.json?app_id="
+                + rate_api_key + "&base=" + base + "&symbols=" + currency;
+        Calendar cal = Calendar.getInstance();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        cal.add(Calendar.DATE, -1);
+        this.historicalData = "historical/" + dateFormat.format(cal.getTime()) + ".json?";
+        this.HISTORICAL_RATE_HTTP = rate_api_http + historicalData
+                + "app_id=" + rate_api_key
+                + "&base=" + base
+                + "&symbols=" + currency;
+    }
 }
