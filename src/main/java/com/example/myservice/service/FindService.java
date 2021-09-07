@@ -13,11 +13,11 @@ import java.util.Calendar;
 @Service
 public class FindService {
     @Autowired
-    FindRate findRate;
+    private FindRate findRate;
     @Autowired
-    FindGif findGif;
-
-    private final MyData myData = new MyData();
+    private FindGif findGif;
+    @Autowired
+    private MyData myData;
 
     private String helloGif = "https://www.reactiongifs.com/r/fgwv.gif";
 
@@ -25,12 +25,9 @@ public class FindService {
     }
 
     public String finder(){
-        Root firstRoot = findRate.findRate(myData.getCurrency(), myData.getDate());
-        Calendar cal = Calendar.getInstance();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        cal.add(Calendar.DATE, -1);
-
-        Root twoRoot = findRate.findRate( myData.getCurrency(), dateFormat.format(cal.getTime()));
+        Root firstRoot = findRate.findRate(true);
+        Root twoRoot = findRate.findRate(false);
+        System.out.println("firstRoot.getRates(): "+firstRoot.getRates() + " twoRoot.getRates(): " + twoRoot.getRates());
         Double check = (firstRoot.getRates() - twoRoot.getRates());
 
         MyGif myGif = findGif.findGif(check);

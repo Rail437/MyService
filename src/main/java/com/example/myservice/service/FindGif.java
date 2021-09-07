@@ -2,9 +2,11 @@ package com.example.myservice.service;
 
 import com.example.myservice.configs.MyData;
 import com.example.myservice.model.MyGif;
+import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -16,17 +18,20 @@ import java.util.Locale;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class FindGif {
-    MyData myData = new MyData();
+    @Autowired
+    private MyData myData;
 
     public MyGif findGif(Double result){
         StringBuilder content = new StringBuilder();
+        String findedGif = myData.getFindRichGif();
         if(result < 0){
-            myData.setFindGif("broke");
+            findedGif = myData.getFindBrokeGif();
         }
 
-        String myUrl = myData.getGIF_HTTP();
-        System.out.println(myUrl);
+        String myUrl = myData.getGIF_HTTP()+findedGif;
+        System.out.println("FindGif: " +myUrl);
         final URL url;
         try {
             url = new URL(myUrl);
@@ -61,7 +66,7 @@ public class FindGif {
             JSONObject imgObject = (JSONObject) myObject.get("images");
             JSONObject resultJson = (JSONObject) imgObject.get("original");
             myGif.setEmbed_url((String) resultJson.get("url"));
-            System.out.println("gifurl: "+myGif.getEmbed_url());
+            //System.out.println("gifurl: "+myGif.getEmbed_url());
 
         } catch (org.json.simple.parser.ParseException e) {
             e.printStackTrace();

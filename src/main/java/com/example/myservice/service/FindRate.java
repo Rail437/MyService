@@ -2,8 +2,10 @@ package com.example.myservice.service;
 
 import com.example.myservice.configs.MyData;
 import com.example.myservice.model.Root;
+import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -14,19 +16,17 @@ import java.net.URL;
 import java.util.Locale;
 
 @Service
+@RequiredArgsConstructor
 public class FindRate {
-    MyData myData = new MyData();
-    public Root findRate(String str, String date){
+    @Autowired
+    MyData myData;
+    public Root findRate(Boolean latest){
         StringBuilder content = new StringBuilder();
-
-        if (!str.isEmpty()) {
-            myData.setCurrency(str);
-        }
-        if (!date.isEmpty()){
-            myData.setDate(date);
-        }
         String myUrl = myData.getRATE_HTTP();
-        System.out.println(myUrl);
+        if (!latest){
+            myUrl = myData.getHISTORICAL_RATE_HTTP();
+        }
+        System.out.println("FindRate: " + myUrl);
         final URL url;
         try {
             url = new URL(myUrl);
@@ -57,7 +57,6 @@ public class FindRate {
             // конвертируем строку с Json в JSONObject для дальнейшего его парсинга
             JSONObject jsonObject = (JSONObject) JSONValue.parseWithException(resultJson);
             JSONObject simpleObject = (JSONObject) jsonObject.get("rates");
-            System.out.println(simpleObject.toString());
             root.setBase((String) jsonObject.get("base"));
             root.setRates((Double) simpleObject.get(finder));
 
