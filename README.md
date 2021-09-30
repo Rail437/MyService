@@ -1,9 +1,12 @@
-# MyService - это сервис, который обращается к сервису курсов валют, и отдает gif в ответ:
-если курс по отношению к usd за сегодня стал выше вчерашнего, то приходит рандомная gif из категории "Rich"
-если курс стал ниже, то приходит рандомная gif из категории "broke".
+# MyService is a service that accesses the exchange rate service, and gives a gif in response.
+***
+If the exchange rate against USD for today has become higher than yesterday, then a random gif from the "Rich" category
+comes, if the rate has become lower, then a random gif from the "broken" category comes.
+***
+The parameters are placed in the settings in the MyData.properties file;
+Communication with the Api for obtaining exchange rates is carried out by the key rate_api_key;
+Communication with the Api for getting gifs is carried out by the gif_api_key key;
 
-Параметры вынесены в настройки в файл MyData.properties;
-Связь с Api для получения курсов валют осуществляется по ключу rate_api_key;
-Связь с Api для получения gif осуществляется по ключу gif_api_key;
-
-Для запуска в Docker необходимо запустить Dockerfile.
+Gradle is used to build the project.
+***
+To run in Docker, you need to run Dockerfile.
